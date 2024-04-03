@@ -1,46 +1,45 @@
-// // src/blog/blog.controller.ts
+// src/blog/blog.service.ts
 
-// import {
-//   Controller,
-//   Get,
-//   Post,
-//   Put,
-//   Delete,
-//   Param,
-//   Body,
-// } from '@nestjs/common';
-// import { BlogService } from './blog.service';
-// import { Blog } from './blog.entity';
+import { Injectable, NotFoundException } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+import { Blog } from '../blog/entity/blog.entity';
+import { CreateBlogDto } from './dtos/create-blog.dto';
+// import { UpdateBlogDto } from './dtos/update-blog.dto';
 
-// @Controller('blogs')
-// export class BlogController {
-//   constructor(private readonly blogService: BlogService) {}
+@Injectable()
+export class BlogService {
+  constructor(
+    @InjectRepository(Blog)
+    private readonly blogRepository: Repository<Blog>,
+  ) {}
 
-//   @Get()
-//   async findAll(): Promise<Blog[]> {
-//     return this.blogService.findAll();
-//   }
+  async findAll(): Promise<Blog[]> {
+    return this.blogRepository.find();
+  }
 
-//   @Get(':id')
-//   async findById(@Param('id') id: number): Promise<Blog> {
-//     return this.blogService.findById(id);
-//   }
+  //   async findById(id: number): Promise<Blog> {
+  //     const blog = await this.blogRepository.findOne(id);
+  //     if (!blog) {
+  //       throw new NotFoundException(`Blog with ID ${id} not found`);
+  //     }
+  //     return blog;
+  //   }
 
-//   @Post()
-//   async create(@Body() blogData: Partial<Blog>): Promise<Blog> {
-//     return this.blogService.create(blogData);
-//   }
+  async create(createBlogDto: CreateBlogDto): Promise<Blog> {
+    const newBlog = this.blogRepository.create(createBlogDto);
+    return this.blogRepository.save(newBlog);
+  }
 
-//   @Put(':id')
-//   async update(
-//     @Param('id') id: number,
-//     @Body() updatedData: Partial<Blog>,
-//   ): Promise<Blog> {
-//     return this.blogService.update(id, updatedData);
-//   }
+  //   async update(id: number, updateBlogDto: UpdateBlogDto): Promise<Blog> {
+  //     await this.blogRepository.update(id, updateBlogDto);
+  //     return this.findById(id);
+  //   }
 
-//   @Delete(':id')
-//   async delete(@Param('id') id: number): Promise<void> {
-//     return this.blogService.delete(id);
-//   }
-// }
+  async delete(id: number): Promise<void> {
+    const result = await this.blogRepository.delete(id);
+    if (result.affected === 0) {
+      throw new NotFoundException(`Blog with ID ${id} not found`);
+    }
+  }
+}

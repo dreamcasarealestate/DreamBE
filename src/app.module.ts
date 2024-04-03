@@ -3,7 +3,8 @@ import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { User } from './entities/user.entity';
+import { User } from './user/entity/user.entity';
+import { BlogModule } from './blog/blog.module';
 
 @Module({
   imports: [
@@ -18,6 +19,7 @@ import { User } from './entities/user.entity';
       synchronize: false,
       ssl: false,
     }),
+    BlogModule,
   ],
   controllers: [AppController],
   providers: [AppService],

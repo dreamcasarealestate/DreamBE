@@ -1,36 +1,50 @@
-// // src/blog/blog.service.ts
+// src/blog/blog.controller.ts
 
-// import { Injectable } from '@nestjs/common';
-// import { InjectRepository } from '@nestjs/typeorm';
-// import { Repository } from 'typeorm';
-// // import { Blog } from '../..src/entity/blog';
+import {
+  Controller,
+  Get,
+  Post,
+  // Put,
+  Delete,
+  Param,
+  Body,
+} from '@nestjs/common';
+import { BlogService } from './blog.service';
+import { Blog } from '../blog/entity/blog.entity';
+import { ApiTags } from '@nestjs/swagger';
+// import { UpdateBlogDto } from './dtos/update-blog.dto';
+import { CreateBlogDto } from './dtos/create-blog.dto';
 
-// @Injectable()
-// export class BlogService {
-//   constructor(
-//     @InjectRepository(Blog)
-//     private readonly blogRepository: Repository<Blog>,
-//   ) {}
+@Controller('blogs')
+@ApiTags('Blogs')
+export class BlogController {
+  constructor(private readonly blogService: BlogService) {}
 
-//   async findAll(): Promise<Blog[]> {
-//     return this.blogRepository.find();
-//   }
+  @Get()
+  async findAll(): Promise<Blog[]> {
+    return this.blogService.findAll();
+  }
 
-//   async findById(id: number): Promise<Blog> {
-//     return this.blogRepository.findOne(id);
-//   }
+  // @Get(':id')
+  // async findById(@Param('id') id: number): Promise<Blog> {
+  //   return this.blogService.findById(id);
+  // }
 
-//   async create(blogData: Partial<Blog>): Promise<Blog> {
-//     const newBlog = this.blogRepository.create(blogData);
-//     return this.blogRepository.save(newBlog);
-//   }
+  @Post()
+  async create(@Body() createBlogDto: CreateBlogDto): Promise<Blog> {
+    return this.blogService.create(createBlogDto);
+  }
 
-//   async update(id: number, updatedData: Partial<Blog>): Promise<Blog> {
-//     await this.blogRepository.update(id, updatedData);
-//     return this.blogRepository.findOne(id);
-//   }
+  // @Put(':id')
+  // async update(
+  //   @Param('id') id: number,
+  //   @Body() updateBlogDto: UpdateBlogDto,
+  // ): Promise<Blog> {
+  //   return this.blogService.update(id, updateBlogDto);
+  // }
 
-//   async delete(id: number): Promise<void> {
-//     await this.blogRepository.delete(id);
-//   }
-// }
+  @Delete(':id')
+  async delete(@Param('id') id: number): Promise<void> {
+    return this.blogService.delete(id);
+  }
+}
