@@ -1,5 +1,3 @@
-// src/blog/blog.controller.ts
-
 import {
   Controller,
   Get,
@@ -10,10 +8,10 @@ import {
   Body,
 } from '@nestjs/common';
 import { BlogService } from './blog.service';
-import { Blog } from '../blog/entity/blog.entity';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 // import { UpdateBlogDto } from './dtos/update-blog.dto';
 import { CreateBlogDto } from './dtos/create-blog.dto';
+import { BlogDto } from './dtos/blog.dto';
 
 @Controller('blogs')
 @ApiTags('Blogs')
@@ -21,7 +19,14 @@ export class BlogController {
   constructor(private readonly blogService: BlogService) {}
 
   @Get()
-  async findAll(): Promise<Blog[]> {
+  @ApiOperation({ summary: 'Get all blogs' })
+  @ApiResponse({
+    status: 200,
+    description: 'List of blogs.',
+    type: BlogDto,
+    isArray: true,
+  })
+  async findAll(): Promise<BlogDto[]> {
     return this.blogService.findAll();
   }
 
@@ -31,7 +36,9 @@ export class BlogController {
   // }
 
   @Post()
-  async create(@Body() createBlogDto: CreateBlogDto): Promise<Blog> {
+  @ApiOperation({ summary: 'Create a new blog' })
+  @ApiResponse({ status: 201, description: 'Blog created.', type: BlogDto })
+  async create(@Body() createBlogDto: CreateBlogDto): Promise<BlogDto> {
     return this.blogService.create(createBlogDto);
   }
 
@@ -44,6 +51,9 @@ export class BlogController {
   // }
 
   @Delete(':id')
+  @ApiOperation({ summary: 'Delete a blog' })
+  // @ApiParam({ name: 'id', description: 'ID of the blog to delete' })
+  @ApiResponse({ status: 200, description: 'Blog deleted.' })
   async delete(@Param('id') id: number): Promise<void> {
     return this.blogService.delete(id);
   }

@@ -1,5 +1,3 @@
-// src/blog/dto/blog.dto.ts
-
 import { ApiProperty } from '@nestjs/swagger';
 
 export class BlogDto {

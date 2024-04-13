@@ -5,6 +5,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Blog } from '../blog/entity/blog.entity';
 import { CreateBlogDto } from './dtos/create-blog.dto';
+import { BlogDto } from './dtos/blog.dto';
 // import { UpdateBlogDto } from './dtos/update-blog.dto';
 
 @Injectable()
@@ -14,7 +15,7 @@ export class BlogService {
     private readonly blogRepository: Repository<Blog>,
   ) {}
 
-  async findAll(): Promise<Blog[]> {
+  async findAll(): Promise<BlogDto[]> {
     return this.blogRepository.find();
   }
 
@@ -26,7 +27,7 @@ export class BlogService {
   //     return blog;
   //   }
 
-  async create(createBlogDto: CreateBlogDto): Promise<Blog> {
+  async create(createBlogDto: CreateBlogDto): Promise<BlogDto> {
     const newBlog = this.blogRepository.create(createBlogDto);
     return this.blogRepository.save(newBlog);
   }

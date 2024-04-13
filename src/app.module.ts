@@ -3,21 +3,41 @@ import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { User } from './user/entity/user.entity';
+// import { User } from './user/entity/user.entity';
 import { BlogModule } from './blog/blog.module';
+import { ConfigModule, ConfigService } from '@nestjs/config';
+import Configuration from './config/configuration';
 
 @Module({
   imports: [
-    TypeOrmModule.forRoot({
-      type: 'postgres',
-      host: 'localhost',
-      port: 5432,
-      username: 'postgres',
-      password: 'root',
-      database: 'dreamcasa',
-      entities: [User],
-      synchronize: false,
-      ssl: false,
+    ConfigModule.forRoot({
+      isGlobal: true,
+      load: [Configuration],
+    }),
+    TypeOrmModule.forRootAsync({
+      imports: [ConfigModule],
+      useFactory: (configService: ConfigService) => ({
+        type: 'postgres',
+        host: configService.get('database.host'),
+        port: +configService.get<number>('database.port'),
+        username: configService.get('database.username'),
+        password: configService.get('database.password'),
+        database: configService.get('database.name'),
+        entities: [__dirname + '/**/*.entity{.ts,.js}'],
+        synchronize: true, // Don't use this option for prod mode
+        keepConnectionAlive: true,
+        timezone: 'UTC',
+        ssl: configService.get('database.ssl'),
+        extra: configService.get('database.ssl')
+          ? {
+              ssl: {
+                rejectUnauthorized: false,
+              },
+            }
+          : null,
+        autoLoadEntities: true,
+      }),
+      inject: [ConfigService],
     }),
     BlogModule,
   ],
