@@ -30,25 +30,12 @@ export class BlogController {
     return this.blogService.findAll();
   }
 
-  // @Get(':id')
-  // async findById(@Param('id') id: number): Promise<Blog> {
-  //   return this.blogService.findById(id);
-  // }
-
   @Post()
   @ApiOperation({ summary: 'Create a new blog' })
   @ApiResponse({ status: 201, description: 'Blog created.', type: BlogDto })
   async create(@Body() createBlogDto: CreateBlogDto): Promise<BlogDto> {
     return this.blogService.create(createBlogDto);
   }
-
-  // @Put(':id')
-  // async update(
-  //   @Param('id') id: number,
-  //   @Body() updateBlogDto: UpdateBlogDto,
-  // ): Promise<Blog> {
-  //   return this.blogService.update(id, updateBlogDto);
-  // }
 
   @Delete(':id')
   @ApiOperation({ summary: 'Delete a blog' })

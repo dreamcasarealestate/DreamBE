@@ -19,23 +19,10 @@ export class BlogService {
     return this.blogRepository.find();
   }
 
-  //   async findById(id: number): Promise<Blog> {
-  //     const blog = await this.blogRepository.findOne(id);
-  //     if (!blog) {
-  //       throw new NotFoundException(`Blog with ID ${id} not found`);
-  //     }
-  //     return blog;
-  //   }
-
   async create(createBlogDto: CreateBlogDto): Promise<BlogDto> {
     const newBlog = this.blogRepository.create(createBlogDto);
     return this.blogRepository.save(newBlog);
   }
-
-  //   async update(id: number, updateBlogDto: UpdateBlogDto): Promise<Blog> {
-  //     await this.blogRepository.update(id, updateBlogDto);
-  //     return this.findById(id);
-  //   }
 
   async delete(id: number): Promise<void> {
     const result = await this.blogRepository.delete(id);
