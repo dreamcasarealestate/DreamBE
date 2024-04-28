@@ -7,6 +7,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { BlogModule } from './blog/blog.module';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import Configuration from './config/configuration';
+import { UserModule } from './user/user.module';
 
 @Module({
   imports: [
@@ -40,6 +41,7 @@ import Configuration from './config/configuration';
       inject: [ConfigService],
     }),
     BlogModule,
+    UserModule,
   ],
   controllers: [AppController],
   providers: [AppService],

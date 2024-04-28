@@ -39,7 +39,6 @@ export class BlogController {
 
   @Delete(':id')
   @ApiOperation({ summary: 'Delete a blog' })
-  // @ApiParam({ name: 'id', description: 'ID of the blog to delete' })
   @ApiResponse({ status: 200, description: 'Blog deleted.' })
   async delete(@Param('id') id: number): Promise<void> {
     return this.blogService.delete(id);
